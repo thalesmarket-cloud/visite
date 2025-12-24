@@ -8,13 +8,13 @@ import { Plus } from './components/Icons';
 
 const App: React.FC = () => {
   const [steps, setSteps] = useState<VisitStep[]>(() => {
-    const saved = localStorage.getItem('visit-steps');
+    const saved = localStorage.getItem('visit-steps-factorial');
     return saved ? JSON.parse(saved) : INITIAL_STEPS;
   });
   const [editingStep, setEditingStep] = useState<VisitStep | null>(null);
 
   useEffect(() => {
-    localStorage.setItem('visit-steps', JSON.stringify(steps));
+    localStorage.setItem('visit-steps-factorial', JSON.stringify(steps));
   }, [steps]);
 
   const handleEdit = (step: VisitStep) => {
@@ -52,8 +52,18 @@ const App: React.FC = () => {
     }
   };
 
+  const exportToJson = () => {
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(steps, null, 2));
+    const downloadAnchorNode = document.createElement('a');
+    downloadAnchorNode.setAttribute("href", dataStr);
+    downloadAnchorNode.setAttribute("download", "planning_visite_factorial_thales.json");
+    document.body.appendChild(downloadAnchorNode);
+    downloadAnchorNode.click();
+    downloadAnchorNode.remove();
+  };
+
   return (
-    <div className="min-h-screen relative overflow-x-hidden pb-20">
+    <div className="min-h-screen relative overflow-x-hidden pb-32">
       <div className="moroccan-pattern fixed inset-0 pointer-events-none" />
 
       {/* Header */}
@@ -67,18 +77,24 @@ const App: React.FC = () => {
         <div className="max-w-6xl mx-auto px-4 py-16 md:py-24 relative">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div>
-              <p className="text-amber-400 font-bold tracking-[0.3em] uppercase mb-4 text-sm">Planning de Visite Partenaire</p>
+              <p className="text-amber-400 font-bold tracking-[0.3em] uppercase mb-4 text-sm">Visite Partenaire : Factorial</p>
               <h1 className="text-4xl md:text-6xl font-serif font-bold mb-4">THALES INFORMATIQUE</h1>
               <p className="text-blue-50 text-lg md:text-xl max-w-2xl font-light">
-                Une demi-journée d'immersion stratégique, culturelle et gastronomique pour sceller notre partenariat franco-marocain.
+                Programme d'accueil personnalisé pour les équipes de <strong>Factorial</strong>. Immersion stratégique et culturelle au cœur du Maroc.
               </p>
             </div>
-            <div className="flex gap-4">
+            <div className="flex flex-wrap gap-3">
               <button 
                 onClick={resetSchedule}
                 className="px-6 py-2 border border-white/20 hover:bg-white/10 rounded-full text-sm font-medium transition-all"
               >
                 Réinitialiser
+              </button>
+              <button 
+                onClick={exportToJson}
+                className="px-6 py-2 bg-white text-thales hover:bg-blue-50 rounded-full text-sm font-bold transition-all shadow-lg"
+              >
+                Exporter la config
               </button>
             </div>
           </div>
@@ -88,7 +104,10 @@ const App: React.FC = () => {
       {/* Main Content */}
       <main className="max-w-6xl mx-auto px-4 mt-12 relative z-10">
         <div className="flex justify-between items-center mb-12">
-          <h2 className="text-2xl font-serif font-bold text-thales">Structure de la demi-journée</h2>
+          <div>
+            <h2 className="text-2xl font-serif font-bold text-thales">Parcours de visite</h2>
+            <p className="text-sm text-gray-500 mt-1">Modifiez, supprimez ou ajoutez des étapes selon vos besoins.</p>
+          </div>
           <button 
             onClick={handleAddStep}
             className="flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-white px-6 py-2.5 rounded-full font-bold shadow-lg shadow-amber-500/30 transition-all active:scale-95"
@@ -128,19 +147,21 @@ const App: React.FC = () => {
       )}
 
       {/* Sticky Bottom Actions */}
-      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 flex gap-4">
-        <div className="bg-white/90 backdrop-blur-md px-6 py-3 rounded-full shadow-2xl border border-blue-100 flex items-center gap-8 text-thales">
+      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 flex gap-4 w-full max-w-md px-4">
+        <div className="bg-white/95 backdrop-blur-md w-full px-6 py-4 rounded-2xl shadow-2xl border border-blue-100 flex items-center justify-between text-thales">
           <div className="flex flex-col">
-            <span className="text-[10px] font-bold text-thales opacity-50 uppercase tracking-widest">Total Étapes</span>
-            <span className="font-bold">{steps.length}</span>
+            <span className="text-[10px] font-bold text-thales opacity-50 uppercase tracking-widest">Partenaire</span>
+            <span className="font-bold text-lg">Factorial</span>
           </div>
           <div className="w-px h-8 bg-blue-100" />
-          <button 
-            className="text-sm font-bold hover:text-amber-600 transition-colors"
-            onClick={() => window.print()}
-          >
-            Imprimer le programme
-          </button>
+          <div className="flex gap-4">
+            <button 
+              className="text-sm font-bold hover:text-amber-600 transition-colors bg-blue-50 px-4 py-2 rounded-lg"
+              onClick={() => window.print()}
+            >
+              Imprimer PDF
+            </button>
+          </div>
         </div>
       </div>
 
@@ -148,8 +169,8 @@ const App: React.FC = () => {
       <footer className="mt-20 py-12 border-t border-gray-100 bg-white">
         <div className="max-w-6xl mx-auto px-4 text-center">
           <div className="w-16 h-px bg-amber-200 mx-auto mb-6" />
-          <p className="text-thales font-serif font-bold text-xl mb-2 italic">L’excellence au service du partenariat</p>
-          <p className="text-gray-400 text-sm">© 2024 Thales Informatique Maroc - Planification de Visite VIP</p>
+          <p className="text-thales font-serif font-bold text-xl mb-2 italic">Thales x Factorial : Ensemble pour l'avenir</p>
+          <p className="text-gray-400 text-sm">© 2024 Thales Informatique Maroc - Planification de Visite Partenaire</p>
         </div>
       </footer>
     </div>
