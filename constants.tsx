@@ -5,7 +5,7 @@ export const INITIAL_STEPS: VisitStep[] = [
   {
     id: '1',
     title: 'Accueil & immersion marocaine',
-    duration: '30 min',
+    duration: '45 min',
     objective: 'Première impression chaleureuse pour Factorial',
     actions: [
       'Thé marocain à la menthe de bienvenue',
@@ -21,7 +21,7 @@ export const INITIAL_STEPS: VisitStep[] = [
   {
     id: '2',
     title: 'Session business & partenariat',
-    duration: '1h 30',
+    duration: '2h 00',
     objective: 'Alignement stratégique Thales x Factorial',
     actions: [
       'Présentation de THALES INFORMATIQUE',
@@ -37,7 +37,7 @@ export const INITIAL_STEPS: VisitStep[] = [
   {
     id: '3',
     title: 'Pause culturelle & storytelling',
-    duration: '30 min',
+    duration: '45 min',
     objective: 'Créer un lien émotionnel fort',
     actions: [
       'Mini présentation : "Le Maroc en 10 minutes"',
@@ -51,7 +51,7 @@ export const INITIAL_STEPS: VisitStep[] = [
   {
     id: '4',
     title: 'Déjeuner / expérience locale',
-    duration: '1h',
+    duration: '1h 30',
     objective: 'Expérience gastronomique mémorable',
     actions: [
       'Restaurant marocain authentique sélectionné',
@@ -66,7 +66,7 @@ export const INITIAL_STEPS: VisitStep[] = [
   {
     id: '5',
     title: 'Moment contenu & communication',
-    duration: '25 min',
+    duration: '45 min',
     objective: 'Valorisation du partenariat sur les réseaux',
     actions: [
       'Photos professionnelles des équipes',
@@ -81,7 +81,7 @@ export const INITIAL_STEPS: VisitStep[] = [
   {
     id: '6',
     title: 'Cadeau symbolique de fin',
-    duration: '10 min',
+    duration: '15 min',
     objective: 'Laisser une trace positive durable',
     actions: [
       'Remise d’un cadeau artisanal élégant à Factorial',

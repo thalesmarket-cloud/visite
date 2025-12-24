@@ -80,7 +80,7 @@ const App: React.FC = () => {
               <p className="text-amber-400 font-bold tracking-[0.3em] uppercase mb-4 text-sm">Visite Partenaire : Factorial</p>
               <h1 className="text-4xl md:text-6xl font-serif font-bold mb-4">THALES INFORMATIQUE</h1>
               <p className="text-blue-50 text-lg md:text-xl max-w-2xl font-light">
-                Programme d'accueil personnalisé pour les équipes de <strong>Factorial</strong>. Immersion stratégique et culturelle au cœur du Maroc.
+                Programme d'immersion stratégique de <strong>6 heures</strong> pour les équipes de <strong>Factorial</strong>. Excellence, innovation et culture au cœur du Maroc.
               </p>
             </div>
             <div className="flex flex-wrap gap-3">
@@ -105,8 +105,8 @@ const App: React.FC = () => {
       <main className="max-w-6xl mx-auto px-4 mt-12 relative z-10">
         <div className="flex justify-between items-center mb-12">
           <div>
-            <h2 className="text-2xl font-serif font-bold text-thales">Parcours de visite</h2>
-            <p className="text-sm text-gray-500 mt-1">Modifiez, supprimez ou ajoutez des étapes selon vos besoins.</p>
+            <h2 className="text-2xl font-serif font-bold text-thales">Parcours de visite (6h)</h2>
+            <p className="text-sm text-gray-500 mt-1">Modifiez les durées pour ajuster le timing global.</p>
           </div>
           <button 
             onClick={handleAddStep}
