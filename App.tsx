@@ -4,7 +4,7 @@ import { VisitStep } from './types';
 import { INITIAL_STEPS } from './constants';
 import StepCard from './components/StepCard';
 import StepEditor from './components/StepEditor';
-import { Plus } from './components/Icons';
+import { Plus, Globe, Coffee, Utensils } from './components/Icons';
 
 const App: React.FC = () => {
   const [steps, setSteps] = useState<VisitStep[]>(() => {
@@ -118,7 +118,7 @@ const App: React.FC = () => {
         </div>
 
         {/* Timeline */}
-        <div className="relative">
+        <div className="relative mb-20">
           {steps.map((step, index) => (
             <StepCard
               key={step.id}
@@ -135,6 +135,40 @@ const App: React.FC = () => {
             </div>
           )}
         </div>
+
+        {/* Bonus Ideas Section */}
+        <section className="bg-amber-50/50 border border-amber-100 rounded-3xl p-8 md:p-12 mb-20">
+          <div className="flex items-center gap-3 mb-8">
+            <span className="text-3xl">🌍</span>
+            <h2 className="text-2xl font-serif font-bold text-thales">IDÉES BONUS <span className="text-amber-600 font-sans text-lg font-medium opacity-80">(SI TEMPS DISPONIBLE)</span></h2>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="bg-white p-6 rounded-2xl shadow-sm border border-amber-100 flex flex-col items-center text-center">
+              <div className="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center text-amber-600 mb-4">
+                <Globe className="w-6 h-6" />
+              </div>
+              <h3 className="font-bold text-gray-800 mb-2">Quartier Emblématique</h3>
+              <p className="text-sm text-gray-500">Petite balade immersive pour découvrir l'âme de la ville.</p>
+            </div>
+
+            <div className="bg-white p-6 rounded-2xl shadow-sm border border-amber-100 flex flex-col items-center text-center">
+              <div className="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center text-amber-600 mb-4">
+                <Utensils className="w-6 h-6" />
+              </div>
+              <h3 className="font-bold text-gray-800 mb-2">Lieu Culturel</h3>
+              <p className="text-sm text-gray-500">Visite express d’un monument ou d'une galerie d'art locale.</p>
+            </div>
+
+            <div className="bg-white p-6 rounded-2xl shadow-sm border border-amber-100 flex flex-col items-center text-center">
+              <div className="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center text-amber-600 mb-4">
+                <Coffee className="w-6 h-6" />
+              </div>
+              <h3 className="font-bold text-gray-800 mb-2">Rooftop Café</h3>
+              <p className="text-sm text-gray-500">Pause détente avec une vue imprenable pour clôturer la journée.</p>
+            </div>
+          </div>
+        </section>
       </main>
 
       {/* Modal Editor */}
@@ -147,7 +181,7 @@ const App: React.FC = () => {
       )}
 
       {/* Sticky Bottom Actions */}
-      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 flex gap-4 w-full max-w-md px-4">
+      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 flex gap-4 w-full max-w-md px-4 print:hidden">
         <div className="bg-white/95 backdrop-blur-md w-full px-6 py-4 rounded-2xl shadow-2xl border border-blue-100 flex items-center justify-between text-thales">
           <div className="flex flex-col">
             <span className="text-[10px] font-bold text-thales opacity-50 uppercase tracking-widest">Partenaire</span>
@@ -170,7 +204,7 @@ const App: React.FC = () => {
         <div className="max-w-6xl mx-auto px-4 text-center">
           <div className="w-16 h-px bg-amber-200 mx-auto mb-6" />
           <p className="text-thales font-serif font-bold text-xl mb-2 italic">Thales x Factorial : Ensemble pour l'avenir</p>
-          <p className="text-gray-400 text-sm">© 2024 Thales Informatique Maroc - Planification de Visite Partenaire</p>
+          <p className="text-gray-400 text-sm">© 2025 Thales Informatique Maroc - Programme de Visite Partenaire</p>
         </div>
       </footer>
     </div>
