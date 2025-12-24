@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { VisitStep } from './types';
 import { INITIAL_STEPS } from './constants';
 import StepCard from './components/StepCard';
@@ -7,14 +7,19 @@ import StepEditor from './components/StepEditor';
 import { Plus, Globe, Coffee, Utensils } from './components/Icons';
 
 const App: React.FC = () => {
+  // Changement de clé pour forcer la mise à jour des horaires chez l'utilisateur
+  const STORAGE_KEY = 'visit-steps-factorial-v6h-3h';
+  
   const [steps, setSteps] = useState<VisitStep[]>(() => {
-    const saved = localStorage.getItem('visit-steps-factorial');
+    const saved = localStorage.getItem(STORAGE_KEY);
     return saved ? JSON.parse(saved) : INITIAL_STEPS;
   });
+  
+  const [startTime, setStartTime] = useState('09:00');
   const [editingStep, setEditingStep] = useState<VisitStep | null>(null);
 
   useEffect(() => {
-    localStorage.setItem('visit-steps-factorial', JSON.stringify(steps));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(steps));
   }, [steps]);
 
   const handleEdit = (step: VisitStep) => {
@@ -47,10 +52,49 @@ const App: React.FC = () => {
   };
 
   const resetSchedule = () => {
-    if (window.confirm('Réinitialiser la structure complète ?')) {
+    if (window.confirm('Réinitialiser la structure complète (6h avec 3h business) ?')) {
       setSteps(INITIAL_STEPS);
     }
   };
+
+  // Helper pour parser la durée (ex: "1h 30" ou "45 min")
+  const parseDuration = (durationStr: string): number => {
+    let totalMinutes = 0;
+    const hoursMatch = durationStr.match(/(\d+)\s*h/);
+    const minsMatch = durationStr.match(/(\d+)\s*min/);
+    
+    if (hoursMatch) totalMinutes += parseInt(hoursMatch[1]) * 60;
+    if (minsMatch) totalMinutes += parseInt(minsMatch[1]);
+    
+    // Si c'est juste un chiffre sans unité, on assume des minutes
+    if (!hoursMatch && !minsMatch) {
+      const fallback = parseInt(durationStr);
+      if (!isNaN(fallback)) totalMinutes = fallback;
+    }
+    
+    return totalMinutes || 30; // 30min par défaut si parsing échoue
+  };
+
+  // Helper pour formater l'heure HH:mm
+  const formatTime = (totalMinutes: number): string => {
+    const h = Math.floor(totalMinutes / 60) % 24;
+    const m = totalMinutes % 60;
+    return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
+  };
+
+  // Calcul des tranches horaires
+  const stepsWithTime = useMemo(() => {
+    const [startH, startM] = startTime.split(':').map(Number);
+    let currentTotalMinutes = startH * 60 + startM;
+
+    return steps.map(step => {
+      const duration = parseDuration(step.duration);
+      const start = formatTime(currentTotalMinutes);
+      currentTotalMinutes += duration;
+      const end = formatTime(currentTotalMinutes);
+      return { ...step, timeRange: `${start} - ${end}` };
+    });
+  }, [steps, startTime]);
 
   const exportToJson = () => {
     const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(steps, null, 2));
@@ -83,7 +127,16 @@ const App: React.FC = () => {
                 Programme d'immersion stratégique de <strong>6 heures</strong> pour les équipes de <strong>Factorial</strong>. Excellence, innovation et culture au cœur du Maroc.
               </p>
             </div>
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap gap-3 items-center">
+              <div className="bg-white/10 p-2 rounded-xl backdrop-blur-sm border border-white/20 mr-2">
+                <label className="block text-[10px] uppercase font-bold text-amber-400 mb-1">Heure de début</label>
+                <input 
+                  type="time" 
+                  value={startTime} 
+                  onChange={(e) => setStartTime(e.target.value)}
+                  className="bg-transparent text-white font-bold outline-none"
+                />
+              </div>
               <button 
                 onClick={resetSchedule}
                 className="px-6 py-2 border border-white/20 hover:bg-white/10 rounded-full text-sm font-medium transition-all"
@@ -106,7 +159,7 @@ const App: React.FC = () => {
         <div className="flex justify-between items-center mb-12">
           <div>
             <h2 className="text-2xl font-serif font-bold text-thales">Parcours de visite (6h)</h2>
-            <p className="text-sm text-gray-500 mt-1">Modifiez les durées pour ajuster le timing global.</p>
+            <p className="text-sm text-gray-500 mt-1">Les horaires s'ajustent automatiquement selon la durée des étapes.</p>
           </div>
           <button 
             onClick={handleAddStep}
@@ -119,13 +172,14 @@ const App: React.FC = () => {
 
         {/* Timeline */}
         <div className="relative mb-20">
-          {steps.map((step, index) => (
+          {stepsWithTime.map((step, index) => (
             <StepCard
               key={step.id}
               step={step}
               isEven={index % 2 !== 0}
               onEdit={() => handleEdit(step)}
               onDelete={() => handleDelete(step.id)}
+              timeRange={(step as any).timeRange}
             />
           ))}
 
