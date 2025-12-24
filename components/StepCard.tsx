@@ -1,0 +1,96 @@
+
+import React from 'react';
+import { VisitStep } from '../types';
+import * as Icons from './Icons';
+
+interface StepCardProps {
+  step: VisitStep;
+  onEdit: () => void;
+  onDelete: () => void;
+  isEven: boolean;
+}
+
+const StepCard: React.FC<StepCardProps> = ({ step, onEdit, onDelete, isEven }) => {
+  const IconComponent = Icons[step.icon as keyof typeof Icons] || Icons.Briefcase;
+
+  return (
+    <div className={`relative flex items-center justify-between w-full mb-12 group`}>
+      {/* Connector Line (Desktop) */}
+      <div className="absolute left-1/2 -ml-0.5 w-1 h-full bg-blue-100 hidden md:block group-last:hidden" />
+      
+      {/* Mobile Connector */}
+      <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-blue-100 md:hidden" />
+
+      <div className={`w-full md:w-[45%] flex flex-col ${isEven ? 'md:order-last' : 'md:order-first'}`}>
+        <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300 relative">
+          
+          <div className="flex justify-between items-start mb-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center text-thales">
+                <IconComponent className="w-6 h-6" />
+              </div>
+              <div>
+                <h3 className="text-lg font-bold text-gray-900 leading-tight">{step.title}</h3>
+                <span className="text-xs font-semibold text-thales bg-blue-50 px-2 py-0.5 rounded uppercase tracking-wider">
+                  {step.duration}
+                </span>
+              </div>
+            </div>
+            
+            <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+              <button 
+                onClick={onEdit}
+                className="p-2 hover:bg-gray-100 rounded-full text-thales"
+                title="Modifier"
+              >
+                <Icons.Edit3 className="w-4 h-4" />
+              </button>
+              <button 
+                onClick={onDelete}
+                className="p-2 hover:bg-red-50 rounded-full text-red-600"
+                title="Supprimer"
+              >
+                <Icons.Trash2 className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            <div>
+              <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest block mb-1">Objectif</span>
+              <p className="text-sm text-gray-700 font-medium">🎯 {step.objective}</p>
+            </div>
+
+            <div className="pt-2">
+              <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest block mb-1">Actions</span>
+              <ul className="space-y-1.5">
+                {step.actions.filter(a => a.trim()).map((action, idx) => (
+                  <li key={idx} className="text-sm text-gray-600 flex items-start gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-blue-200 mt-1.5 flex-shrink-0" />
+                    {action}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {step.tips.some(t => t.trim()) && (
+              <div className="pt-2 mt-2 border-t border-gray-50 italic">
+                <span className="text-[10px] font-bold text-amber-500/80 uppercase tracking-widest block mb-1">💡 Astuce</span>
+                <ul className="space-y-1">
+                  {step.tips.filter(t => t.trim()).map((tip, idx) => (
+                    <li key={idx} className="text-xs text-gray-500">• {tip}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Central Marker */}
+      <div className="z-10 absolute left-6 md:left-1/2 md:-ml-3 w-6 h-6 rounded-full border-4 border-white bg-thales shadow-lg" />
+    </div>
+  );
+};
+
+export default StepCard;
